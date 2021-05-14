@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: exampledep
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: exampledep
+  template:
+    metadata:
+      labels:
+        app: exampledep
+    spec:
+      # restartPolicy: Never
+      maxRetries: "0" 
+      containers:
+        - name: exampledep
+          image: image-registry.openshift-image-registry.svc:5000/nkoike1-dev/getting-started:1.0.0-SNAPSHOT
+          # 環境変数の書き方
+          env:
+            - name: TZ
+              value: "Asia/Tokyo"
+            - name: LANG
+              value: "en_US.UTF-8"
+            - name: JAVA_OPTS
+              value: "-Xmx256m -Xms64m"
+          #   - name: (環境変数名)
+          #     valueFrom:
+          #     secretKeyRef:
+          #       key: (シークレットのKey名)
+          #       name: (シークレット名)
+          #   - name: (環境変数名)
+          #     valueFrom:
+          #     secretKeyRef:
+          #       key: (シークレットのKey名)
+          #       name: (シークレット名)
+          imagePullPolicy: Always
+          ports:
+            - protocol: TCP
+              containerPort: 8080
+            - protocol: TCP
+              containerPort: 9990
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 512Mi
+            requests:
+              cpu: 10m
+              memory: 128Mi
